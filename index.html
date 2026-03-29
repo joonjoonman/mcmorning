@@ -4,14 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>준준의 맥모닝 체크</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@600;700&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     html, body {
-      margin: 0; padding: 0;
       width: 100%; height: 100%;
-      background-color: #e8e8e8;
+      background: #e8e8e8;
       overflow: hidden;
     }
-    .iframe-wrapper { width: 100%; height: 100%; overflow: hidden; }
+
+    /* ── 로딩 오버레이 ── */
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: #DA291C;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 999;
+      transition: opacity 0.5s ease;
+    }
+
+    #loading.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #loading img {
+      width: 64px;
+      height: auto;
+      animation: bounce 0.9s ease-in-out infinite alternate;
+    }
+
+    @keyframes bounce {
+      to { transform: translateY(-12px); }
+    }
+
+    #loading-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #FFC72C;
+      letter-spacing: -0.06em;
+    }
+
+    #loading-sub {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: -0.04em;
+    }
+
+    /* ── iframe ── */
+    .iframe-wrapper {
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
+
     iframe {
       width: 100%;
       height: calc(100% + 50px);
@@ -22,14 +76,34 @@
   </style>
 </head>
 <body>
+
+  <!-- 로딩 화면 -->
+  <div id="loading">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/McDonald%27s_Golden_Arches.svg" alt="M">
+    <div id="loading-title">준준의 맥모닝 체크</div>
+    <div id="loading-sub">데이터 불러오는 중...</div>
+  </div>
+
+  <!-- GAS 웹앱 iframe -->
   <div class="iframe-wrapper">
     <iframe id="gas-frame"></iframe>
   </div>
+
   <script>
-    // ?ref=instagram 등 쿼리스트링을 GAS URL에 그대로 전달
+    // 쿼리스트링(ref=instagram 등)을 GAS URL에 전달
     var base = 'https://script.google.com/macros/s/AKfycbzsGqk1AGbXiptRip-b8Zj0pzg7ohDFk0uZYMdu34FRlED6SeMDSIdXDEXX253pPAIY/exec';
-    var qs   = window.location.search; // 예: "?ref=instagram"
-    document.getElementById('gas-frame').src = base + qs;
+    var qs   = window.location.search;
+    var frame = document.getElementById('gas-frame');
+
+    frame.src = base + qs;
+
+    // iframe 로드 완료 → 로딩 화면 페이드아웃
+    frame.addEventListener('load', function () {
+      var overlay = document.getElementById('loading');
+      overlay.classList.add('fade-out');
+      setTimeout(function () { overlay.style.display = 'none'; }, 500);
+    });
   </script>
+
 </body>
 </html>
