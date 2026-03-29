@@ -6,23 +6,16 @@
   <title>준준의 맥모닝 체크</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #e8e8e8; /* 기존 맥모닝 앱 배경색과 맞춤 */
-      overflow: hidden; /* 이중 스크롤바 방지 */
-    }
-    .iframe-wrapper {
-      width: 100%;
-      height: 100%;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      background-color: #e8e8e8;
       overflow: hidden;
     }
+    .iframe-wrapper { width: 100%; height: 100%; overflow: hidden; }
     iframe {
       width: 100%;
-      /* 상단 배너 높이(약 50px)만큼 위로 당기고, 아래쪽 길이를 늘려줍니다 */
       height: calc(100% + 50px);
-      margin-top: -50px; 
+      margin-top: -50px;
       border: none;
       display: block;
     }
@@ -30,7 +23,13 @@
 </head>
 <body>
   <div class="iframe-wrapper">
-    <iframe src="https://script.google.com/macros/s/AKfycbxWHzIrLw3c_1t1oir63Au9EyT5LYzrf1Ek5oAU2kT7TELtsT6RjiHpeiHeBfhAnycx/exec"></iframe>
+    <iframe id="gas-frame"></iframe>
   </div>
+  <script>
+    // ?ref=instagram 등 쿼리스트링을 GAS URL에 그대로 전달
+    var base = 'https://script.google.com/macros/s/AKfycbxWHzIrLw3c_1t1oir63Au9EyT5LYzrf1Ek5oAU2kT7TELtsT6RjiHpeiHeBfhAnycx/exec';
+    var qs   = window.location.search; // 예: "?ref=instagram"
+    document.getElementById('gas-frame').src = base + qs;
+  </script>
 </body>
 </html>
